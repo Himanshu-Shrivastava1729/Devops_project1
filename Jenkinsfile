@@ -1,6 +1,9 @@
 pipeline {
     agent any
-
+    environment {
+            DOCKER_IMAGE = 'himanshu9271/calculatorv2:latest'
+//             ANSIBLE_PLAYBOOK = 'deploy.yml'
+        }
 
 
     stages {
@@ -26,6 +29,20 @@ pipeline {
                 }
             }
         }
+        stage('Build Docker Image') {
+                    steps {
+                        sh 'docker build -t $DOCKER_IMAGE .'
+                    }
+                }
+
+                stage('Push Docker Image') {
+                    steps {
+                        withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                            sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                            sh 'docker push $DOCKER_IMAGE'
+                        }
+                    }
+                }
 
 
 

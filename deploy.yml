@@ -1,0 +1,22 @@
+- name: Deploy Scientific Calculator
+  hosts: localhost
+  remote_user: himanshu
+  become: false
+  tasks:
+
+    - name: Pull Latest Docker Image
+      command: docker pull himanshu9271/calculatorv2:latest
+
+    - name: Stop and Remove Existing Container
+      command: docker rm -f calculatorv2
+      ignore_errors: yes
+
+    - name: Remove Old Docker Images (Optional)
+      shell: docker images -q himanshu9271/calculatorv2 | xargs -r docker rmi -f
+      ignore_errors: yes
+
+    - name: Run Scientific Calculator Container
+      command: >
+        docker run -d --name calculatorv2
+        himanshu9271/calculatorv2:latest 
+        java -jar app.jar 1 4 2

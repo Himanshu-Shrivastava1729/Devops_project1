@@ -19,4 +19,4 @@
       command: >
         docker run  -it -d --name calculatorv3
         himanshu9271/calculatorv3:latest
-        java -jar app.jar 1 4 2
+        # java -jar app.jar 1 4 2
